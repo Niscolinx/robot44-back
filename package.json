@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production MONGO_USERNAME=robot MONGO_PASSWORD=rFomTe3Sx6ZqJh7K MONGO_DEFAULT_DATABASE=users nodemon app.js"
+    "start": "NODE_ENV=production MONGO_USERNAME=robot44 MONGO_PASSWORD=rFomTe3Sx6ZqJh7K MONGO_DEFAULT_DATABASE=users nodemon app.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

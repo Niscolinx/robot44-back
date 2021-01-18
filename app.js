@@ -120,7 +120,7 @@ console.log('the env port', process.env.PORT)
 
 mongoose
     .connect(
-        `mongodb+srv://robot44${process.env.MONGO_USERNAME}:rFomTe3Sx6ZqJh7K@cluster0.ekorv.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`,
+        `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.ekorv.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`,
         { useUnifiedTopology: true, useNewUrlParser: true }
     )
     .then((result) => {
