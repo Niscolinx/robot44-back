@@ -79,8 +79,6 @@ module.exports = {
                     email: userData.email,
                     password: hashedPassword,
                     fullname: userData.fullname,
-                    secretQuestion: userData.secretQuestion,
-                    secretAnswer: userData.secretAnswer,
                     bitcoinAccount: userData.bitcoinAccount,
                     ethereumAccount: userData.ethereumAccount,
                 })
