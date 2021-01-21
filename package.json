@@ -1,7 +1,7 @@
 {
-  "name": "coinperfectinvestment",
+  "name": "robot44trade",
   "version": "1.0.0",
-  "description": "coinperfectinvestment trading Empire",
+  "description": "robot44trade Empire",
   "main": "app.js",
   "engines": {
     "node": "10.21.0"
