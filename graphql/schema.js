@@ -53,8 +53,6 @@ module.exports = buildSchema(`
         email: String!
         fullname: String!
         password: String!
-        secretQuestion: String!
-        secretAnswer: String!
         ethereumAccount: String
         bitcoinAccount: String
     }
