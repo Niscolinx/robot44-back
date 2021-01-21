@@ -21,8 +21,6 @@ module.exports = buildSchema(`
         email: String!
         fullname: String!
         password: String!
-        secretQuestion: String!
-        secretAnswer: String!
         accountBalance: Int!
         totalWithdrawal: Int!
         totalDeposit: Int!

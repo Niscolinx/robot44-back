@@ -42,14 +42,6 @@ const userSchema = new Schema(
         city: {
             type: String,
         },
-        secretQuestion: {
-            type: String,
-            required: true,
-        },
-        secretAnswer: {
-            type: String,
-            required: true,
-        },
         bitcoinAccount: {
             type: String,
         },
