@@ -1037,19 +1037,18 @@ module.exports = {
             throw err
         }
 
-        const existingUser = await User.findOne({
-            email: updateProfileData.oldEmail,
-        })
-
-        console.log('user data', updateProfileData)
-
+        
+        
         try {
-            // if(updateProfileData.password !== ''){
-            //     console.log("to update password")
-            //     const hashedPassword = await bcrypt.hash(updateProfileData.password, 12)
-            //     exitingUser.password = hashedPassword
+            const existingUser = await User.findOne({
+                email: updateProfileData.oldEmail,
+            })
 
-            // }
+            if(updateProfileData.password !== ''){
+                const hashedPassword = await bcrypt.hash(updateProfileData.password, 12)
+                existingUser.password = hashedPassword
+
+            }
             existingUser.username = updateProfileData.username
             existingUser.email = updateProfileData.email
             existingUser.fullname = updateProfileData.fullname
