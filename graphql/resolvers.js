@@ -1030,6 +1030,7 @@ module.exports = {
     //Profile
 
     createUpdateProfile: async function ({ updateProfileData }, req) {
+
         if (!req.Auth) {
             const err = new Error('Not authenticated')
             err.statusCode = 403
@@ -1039,6 +1040,8 @@ module.exports = {
         const existingUser = await User.findOne({
             email: updateProfileData.oldEmail,
         })
+
+        console.log('user data', updateProfileData)
 
         try {
             // if(updateProfileData.password !== ''){
