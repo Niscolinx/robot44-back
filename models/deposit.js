@@ -11,13 +11,8 @@ const depositSchema = new Schema(
             type: String,
             required: true,
         },
-        // expiryTime: {
-        //     type: String,
-        //     required: true,
-        // },
-        currency: {
-            type: String,
-            required: true,
+        profit: {
+            type: Number,
         },
         creator: {
             type: Schema.Types.ObjectId,

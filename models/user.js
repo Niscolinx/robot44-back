@@ -24,6 +24,12 @@ const userSchema = new Schema(
             required: true,
             default: 'Active',
         },
+        upline: {
+            type: String,
+        },
+        referralLink: {
+            type: String,
+        },
 
         password: {
             type: String,
@@ -52,10 +58,10 @@ const userSchema = new Schema(
             type: String,
         },
 
-        fundAccount: [
+        referral: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'fundAccount',
+                ref: 'referral',
             },
         ],
         pendingDeposits: [

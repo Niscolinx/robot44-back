@@ -70,6 +70,14 @@ module.exports = {
         if (existingUsername) {
             throw new Error('Username already taken')
         }
+
+        const existingReferral = await User.findOne({referral: userData.referral})
+        console.log('existing referral', existingReferral)
+
+        if(!existingReferral){
+            throw new Error('Referral does not exist')
+        }
+
         try {
             const hashedPassword = await bcrypt.hash(userData.password, 12)
 
@@ -80,6 +88,10 @@ module.exports = {
                     password: hashedPassword,
                     fullname: userData.fullname,
                     bitcoinAccount: userData.bitcoinAccount,
+                    city: userData.city,
+                    country: userData.country,
+                    referralLink: `https://robot44trade.com/Auth/signup?ref=${userData.username}`,
+                    upline: userData.referral,
                     ethereumAccount: userData.ethereumAccount,
                 })
 
