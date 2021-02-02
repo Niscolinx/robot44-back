@@ -12,6 +12,7 @@ const PendingDeposit = require('../models/pendingDeposit')
 const PendingWithdrawal = require('../models/pendingWithdrawal')
 const FundAccount = require('../models/fundAccount')
 const Activities = require('../models/activities')
+const Referral = require('../models/referral')
 
 const fileDelete = require('../utility/deleteFile')
 
@@ -79,6 +80,20 @@ module.exports = {
         }
 
         try {
+
+            const newReferral = new Referral({
+                username: userData.username,
+                upline: existingReferral.username
+            })
+
+            console.log('existing referrals', existingReferrals)
+
+        //    const referrals = new Referrals({
+        //        totalReferralCommission:
+        //        totalReferrals: 
+        //        activeReferrals: 
+        //    })
+
             const hashedPassword = await bcrypt.hash(userData.password, 12)
 
             if (hashedPassword) {

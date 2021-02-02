@@ -1,18 +1,19 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-const referralSchema = new Schema(
+const fundAccountSchema = new Schema(
     {
-        totalReferralCommission: {
+        amount: {
             type: Number,
             required: true,
         },
-        totalReferrals: {
-            type: Number,
+        status: {
+            type: String,
             required: true,
+            default: 'Pending',
         },
-        activeReferrals: {
-            type: Number,
+        currency: {
+            type: String,
             required: true,
         },
         creator: {
@@ -24,4 +25,4 @@ const referralSchema = new Schema(
     { timestamps: true }
 )
 
-module.exports = mongoose.model('referral', referralSchema);
+module.exports = mongoose.model('fundAccount', fundAccountSchema)

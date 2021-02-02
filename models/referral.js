@@ -1,25 +1,18 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const pendingDepositSchema = new Schema(
+const referralSchema = new Schema(
     {
-        amount: {
-            type: Number,
-            required: true,
-        },
-        planName: {
+        username: {
             type: String,
             required: true,
         },
-        status: {
-            type: String,
-            required: true,
-            default: 'Pending'
-        },
-        currency: {
+
+        upline: {
             type: String,
             required: true,
         },
+   
         creator: {
             type: Schema.Types.ObjectId,
             ref: 'users',
@@ -29,4 +22,4 @@ const pendingDepositSchema = new Schema(
     { timestamps: true }
 )
 
-module.exports = mongoose.model('pendingDeposit', pendingDepositSchema)
+module.exports = mongoose.model('referral', referralSchema)

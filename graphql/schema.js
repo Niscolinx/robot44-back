@@ -9,10 +9,18 @@ module.exports = buildSchema(`
         creator: User!
         planName: String
         status: String
+        totalReferralCommission: Int
+        totalReferrals: Int
+        activeReferrals: Int
         fundNO: Int
         historyNO: Int
         createdAt: String!
         updatedAt: String!
+    }
+
+    type Referrals {
+        _id: ID!
+
     }
 
     type User {
@@ -27,6 +35,9 @@ module.exports = buildSchema(`
         approvedFunds: Int!
         ethereumAccount: String
         bitcoinAccount: String
+        referralLink: String
+        referrals: [FundAccount!]!
+        upline: String
         city: String
         phone: String
         country: String
@@ -171,6 +182,8 @@ module.exports = buildSchema(`
         user: User!
         userFundAccount: [FundAccount!]!    
         userPendingDeposit: [FundAccount!]!    
+        userPendingWithdrawal: [FundAccount!]!    
+        userReferrals: [FundAccount!]!    
         totalDisbursedAmount: Int!
         totalReceivedAmount: Int!
         pendingDepositsCount: Int!

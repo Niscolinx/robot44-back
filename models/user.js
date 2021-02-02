@@ -58,7 +58,20 @@ const userSchema = new Schema(
             type: String,
         },
 
-        referral: [
+        totalReferralCommission: {
+            type: Number,
+            required: true,
+        },
+        totalReferrals: {
+            type: Number,
+            required: true,
+        },
+        activeReferrals: {
+            type: Number,
+            required: true,
+        },
+
+        referrals: [
             {
                 type: Schema.Types.ObjectId,
                 ref: 'referral',
@@ -70,7 +83,7 @@ const userSchema = new Schema(
                 ref: 'pendingDeposit',
             },
         ],
-        pendingWithdrawal: [
+        pendingWithdrawals: [
             {
                 type: Schema.Types.ObjectId,
                 ref: 'pendingWithdrawal',
@@ -98,13 +111,13 @@ const userSchema = new Schema(
         totalBonus: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'bonus'
+                ref: 'bonus',
             },
         ],
         totalPenalty: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'penalty'
+                ref: 'penalty',
             },
         ],
 
