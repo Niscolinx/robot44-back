@@ -8,6 +8,7 @@ module.exports = buildSchema(`
         currency: String!
         creator: User!
         planName: String
+        username: String
         status: String
         totalReferralCommission: Int
         totalReferrals: Int
@@ -18,10 +19,7 @@ module.exports = buildSchema(`
         updatedAt: String!
     }
 
-    type Referrals {
-        _id: ID!
 
-    }
 
     type User {
         _id: ID!
@@ -36,6 +34,9 @@ module.exports = buildSchema(`
         ethereumAccount: String
         bitcoinAccount: String
         referralLink: String
+        activeReferrals: Int
+        totalReferrals: Int
+        totalReferralCommission: Int
         referrals: [FundAccount!]!
         upline: String
         city: String
@@ -60,9 +61,9 @@ module.exports = buildSchema(`
     input UserInputData {
         username: String!
         email: String!
+        referral: String
         fullname: String!
         password: String!
-        referral: String
         ethereumAccount: String
         bitcoinAccount: String
     }
@@ -183,7 +184,6 @@ module.exports = buildSchema(`
         userFundAccount: [FundAccount!]!    
         userPendingDeposit: [FundAccount!]!    
         userPendingWithdrawal: [FundAccount!]!    
-        userReferrals: [FundAccount!]!    
         totalDisbursedAmount: Int!
         totalReceivedAmount: Int!
         pendingDepositsCount: Int!

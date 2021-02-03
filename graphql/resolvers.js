@@ -15,6 +15,7 @@ const Activities = require('../models/activities')
 const Referral = require('../models/referral')
 
 const fileDelete = require('../utility/deleteFile')
+const user = require('../models/user')
 
 // const mailTransport = nodeMailer.createTransport({
 //     host: 'smtp.mailtrap.io',
@@ -27,6 +28,7 @@ const fileDelete = require('../utility/deleteFile')
 
 module.exports = {
     createUser: async function ({ userData }, req) {
+        console.log('userData', userData)
         const error = []
         if (
             !validator.isEmail(userData.email) ||
@@ -63,6 +65,29 @@ module.exports = {
             username: userData.username,
         })
 
+        if(userData.referral){
+            console.log('referral')
+
+            const upline = await User.findOne({username: userData.referral})
+            console.log('the upline', upline)
+
+            if(!upline){
+                throw new Error('upline does not exit')
+            }
+            else{
+               upline.totalReferrals = upline.totalReferrals + 1
+               upline.activeReferrals = upline.activeReferrals + 1
+
+               upline.referrals.push({
+                   username: userData.username
+               })
+
+               const updatedUpline = await upline.save()
+
+            }
+
+        }
+      
         if (existingUser) {
             const error = new Error('User already exists')
             throw error
@@ -71,42 +96,20 @@ module.exports = {
         if (existingUsername) {
             throw new Error('Username already taken')
         }
-
-        const existingReferral = await User.findOne({referral: userData.referral})
-        console.log('existing referral', existingReferral)
-
-        if(!existingReferral){
-            throw new Error('Referral does not exist')
-        }
-
         try {
-
-            const newReferral = new Referral({
-                username: userData.username,
-                upline: existingReferral.username
-            })
-
-            console.log('existing referrals', existingReferrals)
-
-        //    const referrals = new Referrals({
-        //        totalReferralCommission:
-        //        totalReferrals: 
-        //        activeReferrals: 
-        //    })
-
             const hashedPassword = await bcrypt.hash(userData.password, 12)
 
             if (hashedPassword) {
                 const newUser = new User({
                     username: userData.username,
                     email: userData.email,
+                    city: userData.city,
+                    upline: userData.referral,
+                    referralLink: `https://robot44trade.com/Auth/signup?ref=${userData.username}`,
+                    country: userData.country,
                     password: hashedPassword,
                     fullname: userData.fullname,
                     bitcoinAccount: userData.bitcoinAccount,
-                    city: userData.city,
-                    country: userData.country,
-                    referralLink: `https://robot44trade.com/Auth/signup?ref=${userData.username}`,
-                    upline: userData.referral,
                     ethereumAccount: userData.ethereumAccount,
                 })
 
@@ -194,6 +197,8 @@ module.exports = {
         }
         try {
             const user = await User.findById(req.userId).populate('fundAccount')
+
+
             const fundAccountCount = await User.findById(req.userId)
                 .populate('fundAccount')
                 .countDocuments()
@@ -245,21 +250,9 @@ module.exports = {
             const userPendingDeposit = []
             let theUser = {}
 
-            user._doc.fundAccount.map((p, i) => {
-                userFundAccount.push({
-                    _id: p._id.toString(),
-                    creator: p.creator,
-                    status: p.status,
-                    amount: p.amount,
-                    currency: p.currency,
-                    createdAt: p.createdAt.toLocaleString('en-GB', {
-                        hour12: true,
-                    }),
-                    updatedAt: p.updatedAt.toLocaleString('en-GB', {
-                        hour12: true,
-                    }),
-                })
-            })
+            console.log('get user doc', user)
+
+          
             userPendingDeposits._doc.pendingDeposits.map((p, i) => {
                 userPendingDeposit.push({
                     _id: p._id.toString(),
@@ -331,7 +324,6 @@ module.exports = {
         }
     },
     getAdmin: async function (arg, req) {
-        console.log('the admin')
         if (!req.Auth) {
             const err = new Error('Not authenticated')
             err.statusCode = 403
@@ -426,16 +418,8 @@ module.exports = {
             err.statusCode = 422
             throw err
         }
-        const checkPassword = await bcrypt.compare(
-            withdrawNowData.password,
-            user.password
-        )
+        
 
-        if (!checkPassword) {
-            const err = new Error('Wrong Password')
-            err.statusCode = 422
-            throw err
-        }
 
         try {
             const PendingWithdrawalNow = new PendingWithdrawal({
@@ -1057,24 +1041,23 @@ module.exports = {
     //Profile
 
     createUpdateProfile: async function ({ updateProfileData }, req) {
-
         if (!req.Auth) {
             const err = new Error('Not authenticated')
             err.statusCode = 403
             throw err
         }
 
-        
-        
         try {
             const existingUser = await User.findOne({
                 email: updateProfileData.oldEmail,
             })
 
-            if(updateProfileData.password !== ''){
-                const hashedPassword = await bcrypt.hash(updateProfileData.password, 12)
+            if (updateProfileData.password !== '') {
+                const hashedPassword = await bcrypt.hash(
+                    updateProfileData.password,
+                    12
+                )
                 existingUser.password = hashedPassword
-
             }
             existingUser.username = updateProfileData.username
             existingUser.email = updateProfileData.email

@@ -60,20 +60,20 @@ const userSchema = new Schema(
 
         totalReferralCommission: {
             type: Number,
-            required: true,
+            default: 0,
         },
         totalReferrals: {
             type: Number,
-            required: true,
+            default: 0,
         },
         activeReferrals: {
             type: Number,
-            required: true,
+            default: 0,
         },
 
         referrals: [
             {
-                type: Schema.Types.ObjectId,
+                type: Object,
                 ref: 'referral',
             },
         ],

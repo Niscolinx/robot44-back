@@ -5,19 +5,8 @@ const referralSchema = new Schema(
     {
         username: {
             type: String,
-            required: true,
         },
 
-        upline: {
-            type: String,
-            required: true,
-        },
-   
-        creator: {
-            type: Schema.Types.ObjectId,
-            ref: 'users',
-            required: true,
-        },
     },
     { timestamps: true }
 )
