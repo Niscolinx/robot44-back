@@ -322,6 +322,7 @@ module.exports = {
                     _id: p._id.toString(),
                     amount: p.amount,
                     fundNO: i + 1,
+                    planName: p.planName,
                     profit: p.profit,
                     currency: p.currency,
                     createdAt: p.createdAt.toLocaleString('en-GB', {
@@ -1129,6 +1130,57 @@ module.exports = {
             existingUser.phone = updateProfileData.phone
             existingUser.bitcoinAccount = updateProfileData.bitcoinAccount
             existingUser.ethereumAccount = updateProfileData.ethereumAccount
+
+            const updatedUser = await existingUser.save()
+
+            if (updatedUser) {
+                return {
+                    ...updatedUser._doc,
+                    _id: updatedUser._id.toString(),
+                    updatedAt: updatedUser.updatedAt.toLocaleString('en-GB', {
+                        hour12: true,
+                    }),
+                    createdAt: updatedUser.createdAt.toLocaleString('en-GB', {
+                        hour12: true,
+                    }),
+                }
+            }
+        } catch (err) {
+            console.log('update failed', err)
+        }
+    },
+    createUpdateMember: async function ({ updateMemberData }, req) {
+        console.log('update member data', updateMemberData)
+        if (!req.Auth) {
+            const err = new Error('Not authenticated')
+            err.statusCode = 403
+            throw err
+        }
+
+        try {
+            const existingUser = await User.findOne({
+                email: updateMemberData.oldEmail,
+            })
+
+            if (updateMemberData.password !== '') {
+                const hashedPassword = await bcrypt.hash(
+                    updateMemberData.password,
+                    12
+                )
+                existingUser.password = hashedPassword
+            }
+            existingUser.username = updateMemberData.username
+            existingUser.email = updateMemberData.email
+            existingUser.fullname = updateMemberData.fullname
+            existingUser.city = updateMemberData.city
+            existingUser.activeReferrals = updateMemberData.activeReferrals
+            existingUser.totalReferrals = updateMemberData.totalReferrals
+            existingUser.totalReferralCommission = updateMemberData.totalReferralCommission
+            existingUser.accountBalance = updateMemberData.accountBalance
+            existingUser.country = updateMemberData.country
+            existingUser.phone = updateMemberData.phone
+            existingUser.bitcoinAccount = updateMemberData.bitcoinAccount
+            existingUser.ethereumAccount = updateMemberData.ethereumAccount
 
             const updatedUser = await existingUser.save()
 

@@ -75,6 +75,10 @@ module.exports = buildSchema(`
         password: String
         city: String
         phone: String
+         activeReferrals: Int
+        totalReferrals: Int
+        accountBalance: Int
+        totalReferralCommission: Int
         profilePic: String
         country: String
         ethereumAccount: String
@@ -86,6 +90,10 @@ module.exports = buildSchema(`
         username: String
         email: String
         oldEmail: String
+        activeReferrals: String
+        totalReferrals: String
+        accountBalance: String
+        totalReferralCommission: String
         profilePic: String
         fullname: String
         password: String
@@ -120,6 +128,7 @@ module.exports = buildSchema(`
         createInvestNow(investNowData: PostInvestNowData): FundAccount!
         createWithdrawNow(withdrawNowData: PostWithdrawNowData): FundAccount!
         createUpdateProfile(updateProfileData: PostProfileData): ProfileData!
+        createUpdateMember(updateMemberData: PostProfileData): ProfileData!
         createFundAccountApproval(PostId: PostId): FundAccount!
         createInvestNowApproval(PostId: PostId): FundAccount!
         createWithdrawNowApproval(PostId: PostId): FundAccount!
