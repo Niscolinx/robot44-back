@@ -5,11 +5,12 @@ module.exports = buildSchema(`
     type FundAccount {
         _id: ID!
         amount: Int!
-        currency: String!
+        currency: String
         creator: User!
         planName: String
         username: String
         status: String
+        profit: Int
         totalReferralCommission: Int
         totalReferrals: Int
         activeReferrals: Int
@@ -100,8 +101,7 @@ module.exports = buildSchema(`
         currency: String!
     }
     input PostInvestNowData {
-        amount: String
-        currency: String!
+        amount: String!
         selectedPlan: String!
     }
     input PostWithdrawNowData {
@@ -171,6 +171,7 @@ module.exports = buildSchema(`
     }
     type getUsersData {
         getUser: [User!]! 
+        getUsersId: [User!]!
         userFundAccount: [FundAccount!]!    
     }
     
@@ -184,6 +185,8 @@ module.exports = buildSchema(`
         userFundAccount: [FundAccount!]!    
         userPendingDeposit: [FundAccount!]!    
         userPendingWithdrawal: [FundAccount!]!    
+        userDeposits: [FundAccount!]!    
+        userWithdrawals: [FundAccount!]!    
         totalDisbursedAmount: Int!
         totalReceivedAmount: Int!
         pendingDepositsCount: Int!
@@ -204,6 +207,7 @@ module.exports = buildSchema(`
         getPosts(page: Int): PostData!
         post(id: ID!): FundAccount!
         getUser: getUserData!
+        getMember(id: ID!): getUserData!
         getActivities: getActivitiesData
         getAdmin: User
         getUsers: getUsersData!

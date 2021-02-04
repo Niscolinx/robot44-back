@@ -18,7 +18,6 @@ const pendingDepositSchema = new Schema(
         },
         currency: {
             type: String,
-            required: true,
         },
         creator: {
             type: Schema.Types.ObjectId,

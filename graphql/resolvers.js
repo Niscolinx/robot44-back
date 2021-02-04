@@ -249,10 +249,7 @@ module.exports = {
             const userFundAccount = []
             const userPendingDeposit = []
             let theUser = {}
-
-            console.log('get user doc', user)
-
-          
+            
             userPendingDeposits._doc.pendingDeposits.map((p, i) => {
                 userPendingDeposit.push({
                     _id: p._id.toString(),
@@ -286,10 +283,69 @@ module.exports = {
                 pendingWithdrawalsCount,
                 totalUserDeposits,
                 totalUserWithdrawals,
+                userDeposits,
+                userWithdrawals,
                 fundAccountCount,
             }
         } catch (err) {
             console.log('the error of get user', err)
+        }
+    },
+    getMember: async function ({id}, req) {
+        console.log('get user', id)
+        if (!req.Auth) {
+            const err = new Error('Not authenticated')
+            err.statusCode = 403
+            throw err
+        }
+        try {
+            const user = await User.findById(id)
+
+            const theUserDeposits = await Deposit.find({ creator: id })
+            const userWithdrawals = await Withdrawal.find({
+                creator: id
+            })
+
+           
+
+            if (!user) {
+                const error = new Error('User not found')
+                error.statusCode = 404
+                throw error
+            }
+
+            let theUser = {}
+            let userDeposits = []
+
+            theUserDeposits.map((p, i) => {
+                userDeposits.push({
+                    _id: p._id.toString(),
+                    amount: p.amount,
+                    fundNO: i + 1,
+                    profit: p.profit,
+                    currency: p.currency,
+                    createdAt: p.createdAt.toLocaleString('en-GB', {
+                        hour12: true,
+                    }),
+                    updatedAt: p.updatedAt.toLocaleString('en-GB', {
+                        hour12: true,
+                    }),
+                })
+            })
+         
+
+            theUser = {
+                ...user._doc,
+                _id: user._id.toString(),
+            }
+
+            return {
+                user: theUser,
+                userDeposits,
+                userWithdrawals,
+            }
+        } catch (err) {
+            console.log('the error of get member', err)
         }
     },
 
@@ -321,6 +377,12 @@ module.exports = {
                     }),
                 }
             }),
+            getUsersId: getUsers.map((p, i) => {
+                return {
+                    ...p._doc,
+                    _id: p._id.toString()
+                }
+            })
         }
     },
     getAdmin: async function (arg, req) {
@@ -337,7 +399,6 @@ module.exports = {
             throw error
         }
 
-        console.log('the admin', getAdmin)
 
         return {
             ...getAdmin._doc,
@@ -377,6 +438,7 @@ module.exports = {
                         ...p._doc,
                         _id: p._id.toString(),
                         historyNO: i + 1,
+                        profit: p.profit,
                         createdAt: p.createdAt.toLocaleString('en-GB', {
                             hour12: true,
                         }),
@@ -457,6 +519,7 @@ module.exports = {
     },
 
     createInvestNow: async function ({ investNowData }, req) {
+        console.log('invest now', investNowData)
         if (!req.Auth) {
             const err = new Error('Not authenticated')
             err.statusCode = 403
@@ -475,7 +538,6 @@ module.exports = {
             const investNow = new PendingDeposit({
                 amount: investNowData.amount,
                 planName: investNowData.selectedPlan,
-                currency: investNowData.currency,
                 creator: user,
             })
 
