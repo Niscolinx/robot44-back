@@ -195,6 +195,7 @@ module.exports = buildSchema(`
         userPendingDeposit: [FundAccount!]!    
         userPendingWithdrawal: [FundAccount!]!    
         userDeposits: [FundAccount!]!    
+        memberId: [FundAccount!]!    
         userWithdrawals: [FundAccount!]!    
         totalDisbursedAmount: Int!
         totalReceivedAmount: Int!

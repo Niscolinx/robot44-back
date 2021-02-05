@@ -314,6 +314,7 @@ module.exports = {
 
             let theUser = {}
             let userDeposits = []
+            let memberId = []
 
             theUserDeposits.map((p, i) => {
                 userDeposits.push({
@@ -331,6 +332,12 @@ module.exports = {
                     }),
                 })
             })
+            theUserDeposits.map((p, i) => {
+                memberId.push({
+                    _id: p._id.toString(),
+          
+                })
+            })
 
             theUser = {
                 ...user._doc,
@@ -341,6 +348,7 @@ module.exports = {
                 user: theUser,
                 userDeposits,
                 userWithdrawals,
+                memberId
             }
         } catch (err) {
             console.log('the error of get member', err)
