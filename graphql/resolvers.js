@@ -65,27 +65,23 @@ module.exports = {
             username: userData.username,
         })
 
-        if(userData.referral){
+        if (userData.referral) {
+            const upline = await User.findOne({ username: userData.referral })
 
-            const upline = await User.findOne({username: userData.referral})
-
-            if(!upline){
+            if (!upline) {
                 throw new Error('upline does not exit')
+            } else {
+                upline.totalReferrals = upline.totalReferrals + 1
+                upline.activeReferrals = upline.activeReferrals + 1
+
+                upline.referrals.push({
+                    username: userData.username,
+                })
+
+                const updatedUpline = await upline.save()
             }
-            else{
-               upline.totalReferrals = upline.totalReferrals + 1
-               upline.activeReferrals = upline.activeReferrals + 1
-
-               upline.referrals.push({
-                   username: userData.username
-               })
-
-               const updatedUpline = await upline.save()
-
-            }
-
         }
-      
+
         if (existingUser) {
             const error = new Error('User already exists')
             throw error
@@ -117,7 +113,6 @@ module.exports = {
 
                 updatedActivities.totalMembers =
                     updatedActivities.totalMembers + 1
-               
 
                 await updatedActivities.save()
 
@@ -204,7 +199,6 @@ module.exports = {
         try {
             const user = await User.findById(req.userId).populate('fundAccount')
 
-
             const fundAccountCount = await User.findById(req.userId)
                 .populate('fundAccount')
                 .countDocuments()
@@ -255,7 +249,7 @@ module.exports = {
             const userFundAccount = []
             const userPendingDeposit = []
             let theUser = {}
-            
+
             userPendingDeposits._doc.pendingDeposits.map((p, i) => {
                 userPendingDeposit.push({
                     _id: p._id.toString(),
@@ -297,7 +291,7 @@ module.exports = {
             console.log('the error of get user', err)
         }
     },
-    getMember: async function ({id}, req) {
+    getMember: async function ({ id }, req) {
         console.log('get user', id)
         if (!req.Auth) {
             const err = new Error('Not authenticated')
@@ -309,10 +303,8 @@ module.exports = {
 
             const theUserDeposits = await Deposit.find({ creator: id })
             const userWithdrawals = await Withdrawal.find({
-                creator: id
+                creator: id,
             })
-
-           
 
             if (!user) {
                 const error = new Error('User not found')
@@ -339,7 +331,6 @@ module.exports = {
                     }),
                 })
             })
-         
 
             theUser = {
                 ...user._doc,
@@ -387,9 +378,9 @@ module.exports = {
             getUsersId: getUsers.map((p, i) => {
                 return {
                     ...p._doc,
-                    _id: p._id.toString()
+                    _id: p._id.toString(),
                 }
-            })
+            }),
         }
     },
     getAdmin: async function (arg, req) {
@@ -405,7 +396,6 @@ module.exports = {
             error.statusCode = 404
             throw error
         }
-
 
         return {
             ...getAdmin._doc,
@@ -487,8 +477,6 @@ module.exports = {
             err.statusCode = 422
             throw err
         }
-        
-
 
         try {
             const PendingWithdrawalNow = new PendingWithdrawal({
@@ -795,39 +783,38 @@ module.exports = {
 
             const updatedActivities = await Activities.findOne()
 
-            // updatedActivities.totalMembers =
-            //     updatedActivities.totalMembers + countMembers
-            // updatedActivities.onlineDays = updatedActivities.onlineDays
-            // updatedActivities.totalPaidOut = updatedActivities.totalPaidOut
-            // updatedActivities.totalInvestments =
-            //     updatedActivities.totalInvestments
-            // updatedActivities.newestMember = newestMember.username
-            // updatedActivities.lastDepositName = lastDeposit.creator.username
-            // updatedActivities.lastDepositAmount = lastDeposit.amount
-            // updatedActivities.lastWithdrawalName =
-            //     lastWithdrawal.creator.username
-            // updatedActivities.lastWithdrawalAmount = lastWithdrawal.amount
+            updatedActivities.totalMembers = countMembers
+            updatedActivities.onlineDays = updatedActivities.onlineDays
+            updatedActivities.totalPaidOut = updatedActivities.totalPaidOut
+            updatedActivities.totalInvestments =
+                updatedActivities.totalInvestments
+            updatedActivities.newestMember = newestMember.username
+            updatedActivities.lastDepositName = lastDeposit.creator.username
+            updatedActivities.lastDepositAmount = lastDeposit.amount
+            updatedActivities.lastWithdrawalName =
+                lastWithdrawal.creator.username
+            updatedActivities.lastWithdrawalAmount = lastWithdrawal.amount
 
-            // const theUpdate = await updatedActivities.save()
+            const theUpdate = await updatedActivities.save()
 
-            // console.log('updated activities', theUpdate)
+            console.log('updated activities', theUpdate)
 
             // console.log('lastDeposit', lastDeposit)
             // console.log('lastWithdrawal', lastWithdrawal)
             // console.log('newestMember', newestMember)
             // console.log('count members', countMembers)
 
-            const activities = new Activities({
-                onlineDays: 4232,
-                totalMembers: 679579,
-                totalPaidOut: 215879017,
-                totalInvestments: 355899136,
-                newestMember: newestMember.username,
-                lastDepositName: lastDeposit.creator.username,
-                lastDepositAmount: lastDeposit.amount,
-                lastWithdrawalName: lastWithdrawal.creator.username,
-                lastWithdrawalAmount: lastWithdrawal.amount
-            })
+            // const activities = new Activities({
+            //     onlineDays: 0,
+            //     totalMembers: 0,
+            //     totalPaidOut: 0,
+            //     totalInvestments: 0,
+            //     newestMember: newestMember.username,
+            //     lastDepositName: lastDeposit.creator.username,
+            //     lastDepositAmount: lastDeposit.amount,
+            //     lastWithdrawalName: lastWithdrawal.creator.username,
+            //     lastWithdrawalAmount: lastWithdrawal.amount
+            // })
 
             // let updatedActivities = await activities.save()
 
@@ -959,8 +946,9 @@ module.exports = {
                 const newWithdrawal = await WithdrawalNow.save()
 
                 const updatedActivities = await Activities.findOne()
-                updatedActivities.totalPaidOut = updatedActivities.totalPaidOut + pendingWithdrawal.amount
-                 await updatedActivities.save()
+                updatedActivities.totalPaidOut =
+                    updatedActivities.totalPaidOut + pendingWithdrawal.amount
+                await updatedActivities.save()
 
                 return {
                     ...newWithdrawal._doc,
@@ -1037,12 +1025,10 @@ module.exports = {
 
                 const updatedActivities = await Activities.findOne()
 
-          
                 updatedActivities.totalInvestments =
                     updatedActivities.totalInvestments + pendingDeposit.amount
-              
 
-                 await updatedActivities.save()
+                await updatedActivities.save()
 
                 return {
                     ...newDeposit._doc,
@@ -1197,7 +1183,8 @@ module.exports = {
             existingUser.city = updateMemberData.city
             existingUser.activeReferrals = updateMemberData.activeReferrals
             existingUser.totalReferrals = updateMemberData.totalReferrals
-            existingUser.totalReferralCommission = updateMemberData.totalReferralCommission
+            existingUser.totalReferralCommission =
+                updateMemberData.totalReferralCommission
             existingUser.accountBalance = updateMemberData.accountBalance
             existingUser.country = updateMemberData.country
             existingUser.phone = updateMemberData.phone
