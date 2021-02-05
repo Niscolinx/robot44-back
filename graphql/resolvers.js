@@ -66,10 +66,8 @@ module.exports = {
         })
 
         if(userData.referral){
-            console.log('referral')
 
             const upline = await User.findOne({username: userData.referral})
-            console.log('the upline', upline)
 
             if(!upline){
                 throw new Error('upline does not exit')
@@ -114,6 +112,14 @@ module.exports = {
                 })
 
                 const createdUser = await newUser.save()
+
+                const updatedActivities = await Activities.findOne()
+
+                updatedActivities.totalMembers =
+                    updatedActivities.totalMembers + 1
+               
+
+                await updatedActivities.save()
 
                 if (createdUser) {
                     return {
@@ -789,39 +795,39 @@ module.exports = {
 
             const updatedActivities = await Activities.findOne()
 
-            updatedActivities.totalMembers =
-                updatedActivities.totalMembers + countMembers
-            updatedActivities.onlineDays = updatedActivities.onlineDays
-            updatedActivities.totalPaidOut = updatedActivities.totalPaidOut
-            updatedActivities.totalInvestments =
-                updatedActivities.totalInvestments
-            updatedActivities.newestMember = newestMember.username
-            updatedActivities.lastDepositName = lastDeposit.creator.username
-            updatedActivities.lastDepositAmount = lastDeposit.amount
-            updatedActivities.lastWithdrawalName =
-                lastWithdrawal.creator.username
-            updatedActivities.lastWithdrawalAmount = lastWithdrawal.amount
+            // updatedActivities.totalMembers =
+            //     updatedActivities.totalMembers + countMembers
+            // updatedActivities.onlineDays = updatedActivities.onlineDays
+            // updatedActivities.totalPaidOut = updatedActivities.totalPaidOut
+            // updatedActivities.totalInvestments =
+            //     updatedActivities.totalInvestments
+            // updatedActivities.newestMember = newestMember.username
+            // updatedActivities.lastDepositName = lastDeposit.creator.username
+            // updatedActivities.lastDepositAmount = lastDeposit.amount
+            // updatedActivities.lastWithdrawalName =
+            //     lastWithdrawal.creator.username
+            // updatedActivities.lastWithdrawalAmount = lastWithdrawal.amount
 
-            const theUpdate = await updatedActivities.save()
+            // const theUpdate = await updatedActivities.save()
 
-            console.log('updated activities', theUpdate)
+            // console.log('updated activities', theUpdate)
 
             // console.log('lastDeposit', lastDeposit)
             // console.log('lastWithdrawal', lastWithdrawal)
             // console.log('newestMember', newestMember)
             // console.log('count members', countMembers)
 
-            // const activities = new Activities({
-            //     onlineDays: 4232,
-            //     totalMembers: 679579,
-            //     totalPaidOut: 215879017,
-            //     totalInvestments: 355899136,
-            //     newestMember: newestMember.username,
-            //     lastDepositName: lastDeposit.creator.username,
-            //     lastDepositAmount: lastDeposit.amount,
-            //     lastWithdrawalName: lastWithdrawal.creator.username,
-            //     lastWithdrawalAmount: lastWithdrawal.amount
-            // })
+            const activities = new Activities({
+                onlineDays: 4232,
+                totalMembers: 679579,
+                totalPaidOut: 215879017,
+                totalInvestments: 355899136,
+                newestMember: newestMember.username,
+                lastDepositName: lastDeposit.creator.username,
+                lastDepositAmount: lastDeposit.amount,
+                lastWithdrawalName: lastWithdrawal.creator.username,
+                lastWithdrawalAmount: lastWithdrawal.amount
+            })
 
             // let updatedActivities = await activities.save()
 
@@ -952,6 +958,10 @@ module.exports = {
 
                 const newWithdrawal = await WithdrawalNow.save()
 
+                const updatedActivities = await Activities.findOne()
+                updatedActivities.totalPaidOut = updatedActivities.totalPaidOut + pendingWithdrawal.amount
+                 await updatedActivities.save()
+
                 return {
                     ...newWithdrawal._doc,
                     _id: newWithdrawal._id.toString(),
@@ -1024,6 +1034,15 @@ module.exports = {
                 })
 
                 const newDeposit = await deposit.save()
+
+                const updatedActivities = await Activities.findOne()
+
+          
+                updatedActivities.totalInvestments =
+                    updatedActivities.totalInvestments + pendingDeposit.amount
+              
+
+                 await updatedActivities.save()
 
                 return {
                     ...newDeposit._doc,
