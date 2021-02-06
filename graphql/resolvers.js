@@ -1218,3 +1218,34 @@ module.exports = {
         }
     },
 }
+    createUpdateProfit: async function ({ updateMemberData, memberId }, req) {
+        console.log('update profit data', updateMemberData, memberId)
+        if (!req.Auth) {
+            const err = new Error('Not authenticated')
+            err.statusCode = 403
+            throw err
+        }
+
+        const theDeposit = await Deposit.find(memberId)
+
+        if(!theDeposit){
+            throw new Error('user deposit not found!')
+        }
+
+            if (updatedUser) {
+                return {
+                    ...updatedUser._doc,
+                    _id: updatedUser._id.toString(),
+                    updatedAt: updatedUser.updatedAt.toLocaleString('en-GB', {
+                        hour12: true,
+                    }),
+                    createdAt: updatedUser.createdAt.toLocaleString('en-GB', {
+                        hour12: true,
+                    }),
+                }
+            }
+        } catch (err) {
+            console.log('update failed', err)
+        }
+    },
+}
