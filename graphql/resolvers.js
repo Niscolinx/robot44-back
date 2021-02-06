@@ -335,7 +335,6 @@ module.exports = {
             theUserDeposits.map((p, i) => {
                 memberId.push({
                     _id: p._id.toString(),
-          
                 })
             })
 
@@ -348,7 +347,7 @@ module.exports = {
                 user: theUser,
                 userDeposits,
                 userWithdrawals,
-                memberId
+                memberId,
             }
         } catch (err) {
             console.log('the error of get member', err)
@@ -1217,7 +1216,7 @@ module.exports = {
             console.log('update failed', err)
         }
     },
-}
+
     createUpdateProfit: async function ({ updateMemberData, memberId }, req) {
         console.log('update profit data', updateMemberData, memberId)
         if (!req.Auth) {
@@ -1228,21 +1227,24 @@ module.exports = {
 
         const theDeposit = await Deposit.find(memberId)
 
-        if(!theDeposit){
+        if (!theDeposit) {
             throw new Error('user deposit not found!')
         }
 
-            if (updatedUser) {
-                return {
-                    ...updatedUser._doc,
-                    _id: updatedUser._id.toString(),
-                    updatedAt: updatedUser.updatedAt.toLocaleString('en-GB', {
-                        hour12: true,
-                    }),
-                    createdAt: updatedUser.createdAt.toLocaleString('en-GB', {
-                        hour12: true,
-                    }),
-                }
+        try {
+            theDeposit.profit = updateMemberData.amount
+
+            const updatedDeposit = await theDeposit.save()
+            return {
+                ...updatedDeposit._doc,
+                _id: updatedDeposit._id.toString(),
+                planName: updatedDeposit.planName,
+                updatedAt: updatedDeposit.updatedAt.toLocaleString('en-GB', {
+                    hour12: true,
+                }),
+                createdAt: updatedDeposit.createdAt.toLocaleString('en-GB', {
+                    hour12: true,
+                }),
             }
         } catch (err) {
             console.log('update failed', err)
