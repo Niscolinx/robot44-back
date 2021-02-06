@@ -254,7 +254,12 @@ module.exports = {
             const userFundAccount = []
             const userPendingDeposit = []
             let userPendingWithdrawalAmount = 0
-            const lastDepositAmount = userDeposits[userDeposits.length - 1].amount
+            let lastDepositAmount = 0
+
+            if(userDeposits){
+
+                lastDepositAmount = ucserDeposits[userDeposits.length - 1].amount
+            }
             let theUser = {}
             
             userPendingDeposits._doc.pendingDeposits.map((p, i) => {
@@ -808,12 +813,12 @@ module.exports = {
             updatedActivities.totalPaidOut = updatedActivities.totalPaidOut
             updatedActivities.totalInvestments =
                 updatedActivities.totalInvestments
-            updatedActivities.newestMember = newestMember.username
-            updatedActivities.lastDepositName = lastDeposit.creator.username
-            updatedActivities.lastDepositAmount = lastDeposit.amount
+            updatedActivities.newestMember = newestMember.username ? newestMember.username : ''
+            updatedActivities.lastDepositName = lastDeposit.creator ? lastDeposit.creator.username : ''
+            updatedActivities.lastDepositAmount = lastDeposit.amount ? lastDeposit.amount : 0
             updatedActivities.lastWithdrawalName =
-                lastWithdrawal.creator.username
-            updatedActivities.lastWithdrawalAmount = lastWithdrawal.amount
+                lastWithdrawal.creator.username ? lastWithdrawal.creator.username : ''
+            updatedActivities.lastWithdrawalAmount = lastWithdrawal.amount ? lastWithdrawal.amount : 0
 
             const theUpdate = await updatedActivities.save()
 
