@@ -813,12 +813,12 @@ module.exports = {
             updatedActivities.totalPaidOut = updatedActivities.totalPaidOut
             updatedActivities.totalInvestments =
                 updatedActivities.totalInvestments
-            updatedActivities.newestMember = newestMember.username ? newestMember.username : ''
-            updatedActivities.lastDepositName = lastDeposit.creator ? lastDeposit.creator.username : ''
-            updatedActivities.lastDepositAmount = lastDeposit.amount ? lastDeposit.amount : 0
+            updatedActivities.newestMember = newestMember ? newestMember.username : ''
+            updatedActivities.lastDepositName = lastDeposit ? lastDeposit.creator.username : ''
+            updatedActivities.lastDepositAmount = lastDeposit ? lastDeposit.amount : 0
             updatedActivities.lastWithdrawalName =
-                lastWithdrawal.creator.username ? lastWithdrawal.creator.username : ''
-            updatedActivities.lastWithdrawalAmount = lastWithdrawal.amount ? lastWithdrawal.amount : 0
+                lastWithdrawal ? lastWithdrawal.creator.username : ''
+            updatedActivities.lastWithdrawalAmount = lastWithdrawal ? lastWithdrawal.amount : 0
 
             const theUpdate = await updatedActivities.save()
 
