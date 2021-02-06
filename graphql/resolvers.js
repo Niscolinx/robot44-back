@@ -256,9 +256,9 @@ module.exports = {
             let userPendingWithdrawalAmount = 0
             let lastDepositAmount = 0
 
-            if(userDeposits){
+            if(userDeposits.length > 0){
 
-                lastDepositAmount = ucserDeposits[userDeposits.length - 1].amount
+                lastDepositAmount = userDeposits[userDeposits.length - 1].amount
             }
             let theUser = {}
             
