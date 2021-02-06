@@ -98,7 +98,7 @@ module.exports = buildSchema(`
         fullname: String
         password: String
         city: String
-        profit: Int
+        profit: String
         phone: String
         country: String
         ethereumAccount: String
@@ -129,7 +129,7 @@ module.exports = buildSchema(`
         createInvestNow(investNowData: PostInvestNowData): FundAccount!
         createWithdrawNow(withdrawNowData: PostWithdrawNowData): FundAccount!
         createUpdateProfile(updateProfileData: PostProfileData): ProfileData!
-        createUpdateProfit(id: ID!, updateMemberData: PostProfileData): FundAccount!
+        createUpdateProfit(id: ID!, updateProfitData: PostProfileData): FundAccount!
         createUpdateMember(updateMemberData: PostProfileData): ProfileData!
         createFundAccountApproval(PostId: PostId): FundAccount!
         createInvestNowApproval(PostId: PostId): FundAccount!
