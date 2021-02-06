@@ -1217,15 +1217,15 @@ module.exports = {
         }
     },
 
-    createUpdateProfit: async function ({ updateMemberData, memberId }, req) {
-        console.log('update profit data', updateMemberData, memberId)
+    createUpdateProfit: async function ({ updateMemberData, id }, req) {
+        console.log('update profit data', updateMemberData, id)
         if (!req.Auth) {
             const err = new Error('Not authenticated')
             err.statusCode = 403
             throw err
         }
 
-        const theDeposit = await Deposit.find(memberId)
+        const theDeposit = await Deposit.find(id)
 
         if (!theDeposit) {
             throw new Error('user deposit not found!')
