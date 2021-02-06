@@ -206,6 +206,9 @@ module.exports = {
             const userPendingDeposits = await User.findById(
                 req.userId
             ).populate('pendingDeposits')
+            const userPendingWithdrawals = await User.findById(
+                req.userId
+            ).populate('pendingWithdrawals')
 
             const pendingDepositsCount = await PendingDeposit.find({
                 status: 'Pending',
@@ -219,6 +222,7 @@ module.exports = {
             const userWithdrawals = await Withdrawal.find({
                 creator: req.userId,
             })
+
 
             let totalUserDeposits = 0
             let totalUserWithdrawals = 0
@@ -246,10 +250,13 @@ module.exports = {
                 throw error
             }
 
+            
             const userFundAccount = []
             const userPendingDeposit = []
+            let userPendingWithdrawalAmount = 0
+            const lastDepositAmount = userDeposits[userDeposits.length - 1].amount
             let theUser = {}
-
+            
             userPendingDeposits._doc.pendingDeposits.map((p, i) => {
                 userPendingDeposit.push({
                     _id: p._id.toString(),
@@ -267,6 +274,9 @@ module.exports = {
                     }),
                 })
             })
+            userPendingWithdrawals._doc.pendingWithdrawals.map((p, i) => {
+                userPendingWithdrawalAmount += p.amount
+            })
 
             theUser = {
                 ...user._doc,
@@ -283,6 +293,8 @@ module.exports = {
                 pendingWithdrawalsCount,
                 totalUserDeposits,
                 totalUserWithdrawals,
+                lastDepositAmount,
+                userPendingWithdrawalAmount,
                 userDeposits,
                 userWithdrawals,
                 fundAccountCount,
@@ -494,10 +506,11 @@ module.exports = {
 
             const savePendingWithdrawNow = await PendingWithdrawalNow.save()
 
-            user.pendingWithdrawal.push(savePendingWithdrawNow)
+            user.pendingWithdrawals.push(savePendingWithdrawNow)
 
+            
             await user.save()
-
+            
             return {
                 ...savePendingWithdrawNow._doc,
                 _id: savePendingWithdrawNow._id.toString(),
@@ -547,7 +560,7 @@ module.exports = {
 
             user.pendingDeposits.push(saveInvestNow)
 
-            const userPendingInvest = await user.save()
+             await user.save()
 
             return {
                 ...saveInvestNow._doc,
@@ -1188,6 +1201,8 @@ module.exports = {
             existingUser.email = updateMemberData.email
             existingUser.fullname = updateMemberData.fullname
             existingUser.city = updateMemberData.city
+            existingUser.dailyEarning = updateMemberData.dailyEarning
+            existingUser.totalEarnings = updateMemberData.totalEarnings
             existingUser.activeReferrals = updateMemberData.activeReferrals
             existingUser.totalReferrals = updateMemberData.totalReferrals
             existingUser.totalReferralCommission =
@@ -1217,24 +1232,29 @@ module.exports = {
         }
     },
 
-    createUpdateProfit: async function ({ updateMemberData, id }, req) {
-        console.log('update profit data', updateMemberData, id)
+    createUpdateProfit: async function ({ updateProfitData, id }, req) {
+        console.log('update profit data', updateProfitData, id)
+
         if (!req.Auth) {
             const err = new Error('Not authenticated')
             err.statusCode = 403
             throw err
         }
 
-        const theDeposit = await Deposit.find(id)
+        const theDeposit = await Deposit.findById(id)
+
+        console.log('found deposit', theDeposit)
 
         if (!theDeposit) {
             throw new Error('user deposit not found!')
         }
 
         try {
-            theDeposit.profit = updateMemberData.amount
+            theDeposit.profit = updateProfitData.profit
 
             const updatedDeposit = await theDeposit.save()
+
+            console.log('updated deposit', updatedDeposit)
             return {
                 ...updatedDeposit._doc,
                 _id: updatedDeposit._id.toString(),

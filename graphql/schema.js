@@ -32,6 +32,8 @@ module.exports = buildSchema(`
         totalWithdrawal: Int!
         totalDeposit: Int!
         approvedFunds: Int!
+        dailyEarning: Int
+        totalEarnings: Int
         ethereumAccount: String
         bitcoinAccount: String
         referralLink: String
@@ -95,6 +97,8 @@ module.exports = buildSchema(`
         accountBalance: String
         totalReferralCommission: String
         profilePic: String
+        dailyEarning: String
+        totalEarnings: String
         fullname: String
         password: String
         city: String
@@ -197,6 +201,8 @@ module.exports = buildSchema(`
         userPendingDeposit: [FundAccount!]!    
         userPendingWithdrawal: [FundAccount!]!    
         userDeposits: [FundAccount!]!    
+        lastDepositAmount: Int
+        userPendingWithdrawalAmount: Int,
         memberId: [FundAccount!]!    
         userWithdrawals: [FundAccount!]!    
         totalDisbursedAmount: Int!

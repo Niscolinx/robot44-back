@@ -70,6 +70,21 @@ const userSchema = new Schema(
             type: Number,
             default: 0,
         },
+        totalEarnings: {
+            type: Number,
+            default: 0,
+        },
+
+        dailyEarning: {
+            type: Number,
+            default: 0,
+        },
+
+        accountBalance: {
+            type: Number,
+            required: true,
+            default: '0',
+        },
 
         referrals: [
             {
@@ -101,31 +116,6 @@ const userSchema = new Schema(
                 ref: 'withdraw',
             },
         ],
-        totalEarnings: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'earning',
-            },
-        ],
-
-        totalBonus: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'bonus',
-            },
-        ],
-        totalPenalty: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'penalty',
-            },
-        ],
-
-        accountBalance: {
-            type: Number,
-            required: true,
-            default: '0',
-        },
     },
     { timestamps: true }
 )
