@@ -59,6 +59,10 @@ app.use((req, res, next) => {
     next()
 })
 
+app.get('/', (req, res) => {
+    res.send('Welocome to Robot44trade')
+})
+
 app.use(auth)
 
 app.put('/api/post-image', (req, res, next) => {
